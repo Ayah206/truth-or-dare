@@ -19,12 +19,12 @@
       </div>
       <div class = "row">
         <div class = "col-lg-4 offset-lg-2">
-          <a href="#?genre=truth">
+          <a href="/api/task/<%= category %>?genre=Truth">
             <img class="rounded-circle  " src="images/truth2.png" alt="Circle image">  
           </a>
         </div>
         <div class = "col-lg-4 offset-lg-1">
-          <a href="#?genre=dare">
+          <a href="/api/task/<%= category %>?genre=Dare">
             <img class="rounded-circle" src="images/dare.jpg" alt="Circle image">
           </a>
         </div>
@@ -53,6 +53,5 @@
     + gotten[test()].name+"'s turn :</span>"
     + "Choose <b>TRUTH</b> or <b>DARE</b></div>"  
   }
-  console.log('<%=send%>')
 </script>
 <% include footer %> 

@@ -37,31 +37,11 @@ router.get('/addplayers', async (req, res) => {
 
 router.get('/:category', async (req, res) => {
   try {
-    var finalOutput
-    const sent = req.session
-    let task = null
-    if(sent.asked){
-     task = await Task.find({_id: {$nin : sent.asked},category: req.params.category, genre:req.query.genre});
-    }
-    else {
-      sent.asked = []
-      task = await Task.find({category: req.params.category, genre:req.query.genre});
-    }
-    if(task.length>0){      
-    //get a random task from task array.
-    const send = task[Math.floor(Math.random() * task.length)]
-
-    //add sent tasks to array of sent tasks
-    sent.asked.push(send._id)
-    finalOutput = send.task
-    }
-    else{
-    finalOutput = "Questions exhausted use the reset botton to start again" 
-     }
+    var category = req.params.category
     res.render('play',
     { 
       title: 'TRUTH/DARE',
-      send : finalOutput
+      category: category
      });
     
   } catch (error) {
