@@ -1,8 +1,34 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font-family: "cursive" !important;
+  background-image: url('../images/photo-15.jpg');
+  background-position: right;
 }
 
 a {
   color: #00B7FF;
 }
+.bg-blue{
+  background-color: rgb(15, 15, 39);
+}
+.logo{
+  height: 50px;
+  width: auto;
+}
+.cardx{
+  height: 340px;
+  /* opacity: 0.8 */
+}
+.card-bodyx{
+  overflow-y: scroll;
+}
+.blackbag{
+  background-color: #2d2e30;
+}
+.rounded-circle img{
+  width: 150px;
+  height: 150px;
+}
+.display-6{
+  font-size: large;
+}
+

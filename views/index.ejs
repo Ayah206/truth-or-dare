@@ -1,13 +1,43 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css'/>
-    <link rel='stylesheet' href='/stylesheets/bootstrap.css'/>
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+<% include header%> 
+        <div class="row-10">
+          <div class="card cardx ml-lg-3 col-lg-5 ml-md-3 col-md-5 col-sm-10 ml-sm-0 ">
+            <h4 class="card-header d-flex justify-content-center">SELECT A CATEGORY</h4>
+            <div class="card-body card-bodyx">
+              <ul class="list-group list-group-flush">
+                <% cats.forEach(function (item,index){ %>
+                  <li class="list-group-item">
+                    <a class= "btn btn-primary btn-md btn-block" role="button" href="#" data-toggle="modal" data-target="#modal<%= index %>">
+                      <%= item.name %>
+                    </a>
+                  </li>
+                <% }) %>
+              </ul>
+            </div>
+          </div>
+        </div> 
+
+        <% cats.forEach(function (item,index){ %>
+          <div class="modal fade" id="modal<%= index %>" tabindex="-1" role="dialog" aria-labelledby="exampleModal3Label" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered mr-lg-5" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModal3Label"><%= item.name %> Category</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <%= item.description %>
+                </div>  
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <a href="addplayers?category=<%= item._id %>"  class="btn btn-primary  active" role="button" aria-pressed="true">Add players</a>                </div>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+        
+    </div>
     
-  </body>
-</html>
+<% include scripts %>   
+<% include footer %> 

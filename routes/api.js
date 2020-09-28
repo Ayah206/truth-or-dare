@@ -171,17 +171,18 @@ router.delete('/task/:id', auth, async (req, res) => {
   }
 })
 
-router.get('/task/:category/:genre', async (req, res) => {
+router.get('play/:category', async (req, res) => {
   // get a task
   try {
+      var finalOutput
       const sent = req.session
       let task = null
       if(sent.asked){
-       task = await Task.find({_id: {$nin : sent.asked},category: req.params.category, genre:req.params.genre});
+       task = await Task.find({_id: {$nin : sent.asked},category: req.params.category, genre:req.query.genre});
       }
       else {
         sent.asked = []
-        task = await Task.find({category: req.params.category, genre:req.params.genre});
+        task = await Task.find({category: req.params.category, genre:req.query.genre});
       }
       if(task.length>0){      
       //get a random task from task array.
@@ -189,15 +190,22 @@ router.get('/task/:category/:genre', async (req, res) => {
 
       //add sent tasks to array of sent tasks
       sent.asked.push(send._id)
+      finalOutput = send.task
       sendJSONresponse(res, 200, send.task);  
  
       }
       else{
-        // req.session.destroy((err) => {
-        //   res.redirect('/task/:category/:genre') // will always fire after session is destroyed
-        // })
-        sendJSONresponse(res, 200, {message:'out of questions use the reset button'})
-      }
+      finalOutput = "Questions exhausted use the reset botton to start again" 
+      //   req.session.destroy((err) => {
+      //   res.redirect('/task/:category/:genre') // will always fire after session is destroyed
+      //   })
+       }
+      res.render('play',
+      { 
+        title: 'TRUTH/DARE',
+        send : finalOutput
+       });
+      
   } catch (error) {
       sendJSONresponse(res, 400, {error});
   }

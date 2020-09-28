@@ -1,0 +1,58 @@
+<% include header %> 
+<div class="row ml-lg-3">
+    <div class="col-lg-3 bg-light ml-4 cardx pt-4">
+        <div class="card">
+            <div class="card-body">
+              <h6 class="card-title text-center font-weight-bolder">PLAYERS</h6>
+              <ul class="list-group list-group-flush text-capitalize" id="playerlist">
+              </ul>
+              <a href="/addplayers" class="card-link ml-3"><small>Add/Delete player</small></a>
+            </div>
+          </div>
+          
+    </div>
+    
+    <div class="col-lg-8 bg-light ml-1 cardx">
+      <div class="row" id = "head">
+        <button type="button" class="btn btn-primary btn-lg btn-block mb-5" onclick="start()">Click to start</button>
+        <!-- <h3 class="card-header col-12 mb-5" ></h3> -->
+      </div>
+      <div class = "row">
+        <div class = "col-lg-4 offset-lg-2">
+          <a href="#?genre=truth">
+            <img class="rounded-circle  " src="images/truth2.png" alt="Circle image">  
+          </a>
+        </div>
+        <div class = "col-lg-4 offset-lg-1">
+          <a href="#?genre=dare">
+            <img class="rounded-circle" src="images/dare.jpg" alt="Circle image">
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+<% include scripts %>   
+<script>
+    var playerlist = document.getElementById('playerlist')
+    gotten.forEach((item) => {
+        item = '<li class="list-group-item">'+item.name+'</li>'
+        playerlist.innerHTML += item 
+    })
+    // continous generate index for array
+    var index = -1
+    function test(){
+      index = (index + 1) % gotten.length;
+      return index
+    }
+    
+  // var playerNo = gotten.length
+  function start(){
+    document.getElementById('head').innerHTML = 
+      "<div class='card-header col-12 mb-5' >"
+    + "<span class = 'font-weight-bold text-danger display-6 mr-lg-5 text-uppercase'>"
+    + gotten[test()].name+"'s turn :</span>"
+    + "Choose <b>TRUTH</b> or <b>DARE</b></div>"  
+  }
+  console.log('<%=send%>')
+</script>
+<% include footer %> 
