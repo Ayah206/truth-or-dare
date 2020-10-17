@@ -71,6 +71,41 @@ router.get('/play/:category', async (req, res) => {
 })
 
 
+// from emibrown
+
+router.get('/:new_category', async (req, res) => {
+  try {
+    var category = req.params.category
+    res.render('play',
+    { 
+      title: 'TRUTH/DARE',
+      category: category
+     });
+    
+  } catch (error) {
+      sendJSONresponse(res, 400, {error});
+  }
+})
+
+//new addplayers
+router.get('/new_addplayers', async (req, res) => {
+  try {
+      var category = req.query.category
+      res.render('addplayers',
+      { 
+        title: 'TRUTH/DARE',
+        category: category
+       });
+       console.log(category)
+      } 
+      catch (error) {
+      sendJSONresponse(res, 400, {error});
+  }
+})
+
+
+
+
 
 
 
