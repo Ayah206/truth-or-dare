@@ -316,7 +316,7 @@ router.get('/genres', async (req, res) => {
 router.get('/new_accounts', async(req, res) => {
   //get all accounts
   try {
-      const accounts = await Account.find()
+      const new_accounts = await Account.find()
       sendJSONresponse(res, 200, {accounts}) 
       if (!account) {
           throw error;
