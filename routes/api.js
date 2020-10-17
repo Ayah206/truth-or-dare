@@ -44,6 +44,8 @@ router.post('/register', async (req, res) => {
   }
 })
 
+
+
 router.post('/login', async(req, res) => {
   //Login to the app
   try {
@@ -275,6 +277,20 @@ router.get('/new_accounts', async(req, res) => {
       }
   } catch (error) {
       sendJSONresponse(res, 400, {error});
+  }
+})
+
+// new register
+router.post('/new_register', async (req, res) => {
+  // Create an account
+  try {
+      const account = new Account(req.body)
+      await account.save()
+      const token = await account.generateAuthToken()
+      sendJSONresponse(res, 200, {account, token});  
+  } 
+  catch (error) {
+      sendJSONresponse(res, 401, {error});
   }
 })
 
