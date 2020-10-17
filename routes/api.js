@@ -125,16 +125,18 @@ router.get('/categories', async (req, res) => {
 })
 
 //task API's
-router.post('/task/:category', auth, async (req, res) => {
+router.post('/task/:category', async (req, res) => {
   // Create a task for a category with user login id. 
   //REMEMBER THAT THIS FEATURE IS ONLY AVAILABLE TO LOGGED IN USERS
   try {
-    console.log('anything')
-      req.body.addedBy = req.account.id
-      req.body.category = req.params.category  
-      const task = new Task(req.body).populate('genre')
+      console.log('anything')
+      // req.body.addedBy = req.account.id
+      req.body.category = req.params.category
+      console.log(req.body)
+      const task = new Task(req.body)
       await task.save()
-      sendJSONresponse(res, 200, {task});  
+      console.log(task)
+      sendJSONresponse(res, 200, {message:'task added successfully'});  
   } 
   catch (error) {
       sendJSONresponse(res, 400, {error});
@@ -157,59 +159,105 @@ router.put('/task/:id', auth, async (req, res) => {
   }
 })
 
-router.delete('/task/:id', auth, async (req, res) => {
+router.delete('/task', auth, async (req, res) => {
   // delete a task using id of the task.
   try {
       let task
-      if(req.account.userName != 'Admin'){
-        task = await Task.findOneAndDelete({_id: req.params.id, addedBy : req.account.id }); 
-      }
-      task = await Task.findOneAndDelete({_id: req.params.id});
+        task = await Task.deleteMany({}); 
+      
       sendJSONresponse(res, 200, {message:'item deleted successfully'});
   } catch (error) {
       sendJSONresponse(res, 400, {error});
   }
 })
 
-router.get('/task/:category', async (req, res) => {
-  // get a task
-  try {
-      const genre = await Genre.findOne({name: req.query.genre});
-      var finalOutput
+router.get('/task/truth/:category', async (req, res) => {
+  // get a truth
+ try {
       const sent = req.session
       let task = null
-
-      if(sent.asked){
-       task = await Task.find({_id: {$nin : sent.asked},category: req.params.category, genre:genre._id});
+      const genre = 'Truth'
+      if(sent.askedTruth){
+       task = await Task.find({_id: {$nin : sent.askedTruth},category: req.params.category, genre:genre});
       }
       else {
-        sent.asked = []
-        task = await Task.find({category: req.params.category, genre:genre._id});
+        sent.askedTruth = []
+        task = await Task.find({category: req.params.category, genre:genre});
       }
       if(task.length>0){      
       //get a random task from task array.
       const send = task[Math.floor(Math.random() * task.length)]
+      console.log(task)
 
       //add sent tasks to array of sent tasks
-      sent.asked.push(send._id)
-      finalOutput = send.task
+      sent.askedTruth.push(send._id)
+      var outputTask = send.task
       }
       else{
-      finalOutput = "Questions exhausted use the reset botton to start again" 
-        // req.session.destroy()
-       }
-      sendJSONresponse(res, 400, {finalOutput});
+        var outOfTask = 'out of tasks, click the reset button to restart'
+      }
+   
+      sendJSONresponse(res, 200, {outputTask, outOfTask, genre});
       
   } catch (error) {
       sendJSONresponse(res, 400, {error});
   }
 })
 
-router.put('/task/:category/:genre', async (req, res) => {
+router.get('/task/dare/:category', async (req, res) => {
+  // get a dare
+  try {
+      const sent = req.session
+      let task = null
+      const genre = 'Dare'
+      if(sent.askedDare){
+       task = await Task.find({_id: {$nin : sent.askedDare},category: req.params.category, genre:genre});
+      }
+      else {
+        sent.askedDare = []
+        task = await Task.find({category: req.params.category, genre:genre});
+      }
+      if(task.length>0){      
+      //get a random task from task array.
+      const send = task[Math.floor(Math.random() * task.length)]
+      console.log(task)
+
+      //add sent tasks to array of sent tasks
+      sent.askedDare.push(send._id)
+      var outputTask = send.task
+      }
+      else{
+        var outOfTask = 'out of tasks, click the reset button to restart'
+      }
+   
+      sendJSONresponse(res, 200, {outputTask, outOfTask, genre});
+      
+  } catch (error) {
+      sendJSONresponse(res, 400, {error});
+  }
+})
+
+router.get('/tasks', async (req, res) => {
+  // get all tasks
+  try {
+      const task = await Task.find().populate('genre');
+      sendJSONresponse(res, 200, task);
+  } catch (error) {
+      sendJSONresponse(res, 400, {error});
+  }
+})
+router.get('/reset/:genre', async (req, res) => {
   // reset game
   try {
-      req.session.destroy()
-      sendJSONresponse(res, 200, {message: 'success'});
+      const genre =  req.params.genre
+      if(genre === 'Truth'){
+        delete req.session.askedTruth
+        sendJSONresponse(res, 200, {message: 'truth reset successful'});
+      }
+      else if(genre === 'Dare'){
+        delete req.session.askedDare
+        sendJSONresponse(res, 200, {message: 'dare reset successful'});
+      }
   } catch (error) {
       sendJSONresponse(res, 400, {error});
   }
@@ -243,10 +291,10 @@ router.put('/genre/:id', auth, async (req, res) => {
   }
 })
 
-router.delete('/genre/:id', auth, async (req, res) => {
+router.delete('/genre', auth, async (req, res) => {
   // delete a task using id of the task.
   try {
-      const genre = await Genre.findOneAndDelete({_id: req.params.id});
+    const genre = await Genre.deleteMany({});
       sendJSONresponse(res, 200, {message:'item deleted successfully'});
   } catch (error) {
       sendJSONresponse(res, 400, {error});

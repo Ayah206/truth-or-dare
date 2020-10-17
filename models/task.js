@@ -6,8 +6,7 @@ const taskSchema = mongoose.Schema({
         required : true
     },
     genre : {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Genre',
+        type: String,
         required : true
     },
     category: {
@@ -15,15 +14,14 @@ const taskSchema = mongoose.Schema({
         required: true,
         ref: 'Category'   
     },
-    asked: {
-        type: String,
-        required: true,
-        default: "0"   
-    },
     addedBy: {
         type: mongoose.Schema.Types.ObjectId,
-        required: true,
+        // required: true,
         ref: 'Account'   
+    },
+    indx : {
+        type: Number,
+        required: false
     }
 })
 

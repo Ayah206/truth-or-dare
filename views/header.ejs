@@ -9,7 +9,7 @@
     <div class="container-fluid p-0">
       <nav class="navbar navbar-expand-lg navbar-light sticky-top  mb-5 blackbag p-1">
         <a class="navbar-brand text-light"  href="#"><h3>
-          <img src = "images/unnamed.png" class = "logo">
+          <img src = "/images/unnamed.png" class = "logo">
           <b style="font-family: cursive;"><%= title %></b></h3>
         </a>
         <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -17,9 +17,28 @@
         </button>
       
         <div class="navbar-collapse collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-            </li>
+          <ul class="navbar-nav ml-auto">
+              <li class="nav-item dropdown ">
+                <a class="nav-link dropdown-toggle text-danger" data-toggle="dropdown"
+                   href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                   CUSTOMIZE</a>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item nav-link dropright-toggle text-primary dropleft" data-toggle="dropdown"
+                  href="#" role="button" aria-haspopup="true" aria-expanded="false">Add tasks</a>
+                  <div class="dropdown-menu" x-placement="right-start" style="position: absolute; transform: translate3d(111px, 0px, 0px); top: 0px; left: 0px; will-change: transform;">
+                    <% cats.forEach(function (item,index){ %>   
+                    <a class="dropdown-item" href="/addtask?category=<%= item._id %>&categoryname=<%= item.name %>"><%= item.name %></a>
+                    <% }) %> 
+                  </div>
+                  <a class="dropdown-item nav-link dropright-toggle text-primary" data-toggle="dropdown"
+                  href="#" role="button" aria-haspopup="true" aria-expanded="false">Edit/Delete tasks</a>
+                  <div class="dropdown-menu" x-placement="right-start" style="position: absolute; transform: translate3d(111px, 0px, 0px); top: 0px; left: 0px; will-change: transform;">
+                    <% cats.forEach(function (item,index){ %>   
+                    <a class="dropdown-item" href="/edittask?category=<%= item._id %>&categoryname=<%= item.name %>"><%= item.name %></a>
+                    <% }) %> 
+                  </div>
+                </div>
+              </li>
           </ul>
           <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
             <button type="button" class="btn btn-primary">LOGIN</button>

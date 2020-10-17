@@ -6,52 +6,146 @@
               <h6 class="card-title text-center font-weight-bolder">PLAYERS</h6>
               <ul class="list-group list-group-flush text-capitalize" id="playerlist">
               </ul>
-              <a href="/addplayers" class="card-link ml-3"><small>Add/Delete player</small></a>
+              <a href="/addplayers?category=<%=category %> " class="card-link ml-3"><small>Add/Delete player</small></a>
             </div>
           </div>
           
     </div>
     
     <div class="col-lg-8 bg-light ml-1 cardx">
-      <div class="row" id = "head">
-        <button type="button" class="btn btn-primary btn-lg btn-block mb-5" onclick="start()">Click to start</button>
-        <!-- <h3 class="card-header col-12 mb-5" ></h3> -->
+      <div class="row mb-5" id = "head">
+        <div class='card-header col-12' >
+          <span class = 'font-weight-bold text-danger display-6 mr-lg-5 text-uppercase' id = 'span'> </span>Choose <b>TRUTH</b> or <b>DARE</b>
+        </div>
       </div>
       <div class = "row">
         <div class = "col-lg-4 offset-lg-2">
-          <a href="/api/task/<%= category %>?genre=Truth">
-            <img class="rounded-circle  " src="images/truth2.png" alt="Circle image">  
+          <a id="truth" onclick = "fetchTruth()" data-toggle="modal" data-target="#ModalCentered">
+            <img class="rounded-circle  " src="/images/truth2.png" alt="Circle image">  
           </a>
         </div>
         <div class = "col-lg-4 offset-lg-1">
-          <a href="/api/task/<%= category %>?genre=Dare">
-            <img class="rounded-circle" src="images/dare.jpg" alt="Circle image">
+          <a id="dare" onclick = "fetchDare()" data-toggle="modal" data-target="#ModalCentered">
+            <img class="rounded-circle" src="/images/dare.jpg" alt="Circle image">
           </a>
+        </div>
+      </div>
+      <div class="row output">
+        
+      </div>
+    </div> 
+    <div class="modal text-capitalize" id="ModalCentered" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenteredLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <span class="modal-title" id="exampleModalCenteredLabel"></span>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body"> 
+          </div>
+          <div class="modal-footer">
+            <span class="modal-reset"></span>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
         </div>
       </div>
     </div>
   </div>
 <% include scripts %>   
 <script>
-    var playerlist = document.getElementById('playerlist')
-    gotten.forEach((item) => {
-        item = '<li class="list-group-item">'+item.name+'</li>'
-        playerlist.innerHTML += item 
-    })
-    // continous generate index for array
-    var index = -1
-    function test(){
-      index = (index + 1) % gotten.length;
-      return index
-    }
-    
-  // var playerNo = gotten.length
-  function start(){
-    document.getElementById('head').innerHTML = 
-      "<div class='card-header col-12 mb-5' >"
-    + "<span class = 'font-weight-bold text-danger display-6 mr-lg-5 text-uppercase'>"
-    + gotten[test()].name+"'s turn :</span>"
-    + "Choose <b>TRUTH</b> or <b>DARE</b></div>"  
+  var playerlist = document.getElementById('playerlist')
+  gotten.forEach((item) => {
+      item = '<li class="list-group-item">'+item.name+'</li>'
+      playerlist.innerHTML += item 
+  })
+  // continous generate index for array
+  var index = 0
+  function test(){
+    index = (index + 1) % gotten.length;
+    return index
   }
+  let player = gotten[0].name
+  function changePlayer(){
+    player = gotten[test()].name
+    return player
+  }
+  document.getElementById('span').innerHTML = `${player}'s turn :`
+     
+  var truthTask = document.getElementById('truth')
+  var dareTask = document.getElementById('dare')
+
+function fetchTask(url){
+  async function getTask() {
+      try {
+          let res = await fetch(url);
+          return await res.json();
+      } catch (error) {
+          console.log(error);
+      }
+    }
+  async function renderTask() {
+      let task = await getTask();
+      let message
+      let title
+      if(task.outputTask){
+        message = task.outputTask
+        title = task.genre
+        document.getElementById('span').innerHTML = `${changePlayer()}'s turn :`
+        document.querySelector('.modal-reset').innerHTML = ""
+      }
+      else if(task.outOfTask){
+        message = `<span class = "text-dark">${task.outOfTask}</span>`
+        title = '<span class = "text-danger">Oooops!!!</span>'
+        document.querySelector('.modal-reset').innerHTML =`<button type="button" class="btn btn-success reset-btn" onclick="reset('${task.genre}')">Reset</button>`
+      }
+      else{
+        message = 'invalid category'
+        title = '<span class = "text-danger">error!</span>'
+      }
+      let body = `<h6>${message}</h6>`;
+      let head = `<h2 class = "text-green">${title}</h2>`;
+      let container = document.querySelector('.modal-body');
+      let containerHead = document.querySelector('.modal-title');
+      containerHead.innerHTML = head;
+      container.innerHTML = body;
+      
+    }
+    renderTask();
+}
+  
+function fetchTruth (){  
+  fetchTask('/api/task/truth/<%= category %>')  
+}
+
+function fetchDare (){
+  fetchTask('/api/task/dare/<%= category %>')  
+}
+
+function reset(gen){
+  async function getTask() {
+      let url = '/api/reset/'+gen;
+    try {
+        let res = await fetch(url);
+        return await res.json();
+    } catch (error) {
+        console.log(error);
+    }
+  }
+  async function renderTask() {
+    let task = await getTask();
+    var message = task.message
+    let body = `<h6>${message}</h6>`;
+    let head = `<h2 class = "text-green">Success</h2>`;
+    let container = document.querySelector('.modal-body');
+    let containerHead = document.querySelector('.modal-title');
+    containerHead.innerHTML = head;
+    container.innerHTML = body;  
+    document.querySelector('.modal-reset').innerHTML = ""
+  }
+  renderTask();
+}
+ 
 </script>
 <% include footer %> 

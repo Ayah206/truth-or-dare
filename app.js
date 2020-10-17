@@ -7,6 +7,7 @@ var session = require('express-session')
 
 var indexRouter = require('./routes/index');
 var apiRouter = require('./routes/api');
+var setupRouter = require('./routes/setup');
 
 var app = express();
 var server = require('http').Server(app);
@@ -26,6 +27,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({secret: 'ssshhhhhhh',saveUninitialized: true,resave: true,cookie: {}}))
 app.use('/', indexRouter);
 app.use('/api', apiRouter);
+app.use('/setup', setupRouter);
 
 
 // catch 404 and forward to error handler

@@ -22,11 +22,13 @@ router.get('/', async (req, res) => {
 
 router.get('/addplayers', async (req, res) => {
   try {
+      const categories = await Category.find();
       var category = req.query.category
       res.render('addplayers',
       { 
         title: 'TRUTH/DARE',
-        category: category
+        category: category,
+        cats: categories
        });
        console.log(category)
       } 
@@ -34,13 +36,32 @@ router.get('/addplayers', async (req, res) => {
       sendJSONresponse(res, 400, {error});
   }
 })
-
-router.get('/:category', async (req, res) => {
+router.get('/addtask', async (req, res) => {
   try {
+    const categories = await Category.find();
+    const category =req.query.category;
+    const genres = await Genre.find();
+    res.render('addtasks',
+    { 
+      title: 'TRUTH/DARE',
+      category: category,
+      genres: genres,
+      cats: categories
+     });
+    
+  } catch (error) {
+      sendJSONresponse(res, 400, {error});
+  }
+})
+
+router.get('/play/:category', async (req, res) => {
+  try {
+    const categories = await Category.find();
     var category = req.params.category
     res.render('play',
     { 
       title: 'TRUTH/DARE',
+      cats: categories,
       category: category
      });
     
@@ -48,6 +69,8 @@ router.get('/:category', async (req, res) => {
       sendJSONresponse(res, 400, {error});
   }
 })
+
+
 
 
 
