@@ -311,5 +311,20 @@ router.get('/genres', async (req, res) => {
   }
 })
 
+
+//new accounts
+router.get('/new_accounts', async(req, res) => {
+  //get all accounts
+  try {
+      const accounts = await Account.find()
+      sendJSONresponse(res, 200, {accounts}) 
+      if (!account) {
+          throw error;
+      }
+  } catch (error) {
+      sendJSONresponse(res, 400, {error});
+  }
+})
+
 module.exports = router;
 
