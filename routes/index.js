@@ -50,5 +50,22 @@ router.get('/:category', async (req, res) => {
 })
 
 
+// from emibrown
+
+router.get('/:new_category', async (req, res) => {
+  try {
+    var category = req.params.category
+    res.render('play',
+    { 
+      title: 'TRUTH/DARE',
+      category: category
+     });
+    
+  } catch (error) {
+      sendJSONresponse(res, 400, {error});
+  }
+})
+
+
 
 module.exports = router;
