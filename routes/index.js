@@ -66,6 +66,24 @@ router.get('/:new_category', async (req, res) => {
   }
 })
 
+//new addplayers
+router.get('/new_addplayers', async (req, res) => {
+  try {
+      var category = req.query.category
+      res.render('addplayers',
+      { 
+        title: 'TRUTH/DARE',
+        category: category
+       });
+       console.log(category)
+      } 
+      catch (error) {
+      sendJSONresponse(res, 400, {error});
+  }
+})
+
+
+
 
 
 module.exports = router;
